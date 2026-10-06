@@ -1,27 +1,49 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateAccountDto } from './dto/create-account.dto.js';
 import { UpdateAccountDto } from './dto/update-account.dto.js';
+import { Repository } from 'typeorm';
+import { Account } from './entities/account.entity.js';
 
 @Injectable()
 export class AccountsService {
-  create(createAccountDto: CreateAccountDto) {
-    
-    return 'This action adds a new account';
+  constructor(
+    private readonly accountRepository: Repository<Account>
+  ){}
+  async create(createAccountDto: CreateAccountDto) {
+    const account = await this.accountRepository.create(createAccountDto)
+    return await this.accountRepository.save(account);
   }
 
-  findAll() {
-    return `This action returns all accounts`;
+  async findAll() {
+    return await this.accountRepository.find();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} account`;
+  async findOne(id: number) {
+    const account = await this.accountRepository.findOneBy({id})
+
+    if (!account) {
+      throw new NotFoundException("account not found")
+    }
+
+    return account;
   }
 
-  update(id: number, updateAccountDto: UpdateAccountDto) {
-    return `This action updates a #${id} account`;
+  async update(id: number, updateAccountDto: UpdateAccountDto) {
+    const account = await this.accountRepository.findOneBy({id})
+
+    if (!account) {
+      throw new NotFoundException("account not found")
+    }
+
+    return await this.accountRepository.update(id, updateAccountDto);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} account`;
+  async remove(id: number) {
+    const account = await this.accountRepository.findOneBy({id})
+
+    if (!account) {
+      throw new NotFoundException("account not found")
+    }
+    return await this.accountRepository.remove(account);
   }
 }
