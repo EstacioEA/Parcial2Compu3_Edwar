@@ -16,4 +16,6 @@ export class CreateTransferDto {
     @IsInt()
     destinationAccount: number
 
+    @IsString()
+    rejectionReason?: string
 }
