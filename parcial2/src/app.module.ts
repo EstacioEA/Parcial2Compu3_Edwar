@@ -5,6 +5,10 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { ClientsModule } from './clients/clients.module.js';
+import { AccountsModule } from './accounts/accounts.module.js';
+import { TransfersModule } from './transfers/transfers.module.js';
+import { BeneficiariesModule } from './beneficiaries/beneficiaries.module.js';
 
 const currentDirectory = dirname(fileURLToPath(import.meta.url));
 
@@ -34,6 +38,10 @@ const currentDirectory = dirname(fileURLToPath(import.meta.url));
                     synchronize: configService.get<boolean>('DB_SYNCHRONIZE') ?? true,
                 }) as TypeOrmModuleOptions,
         }),
+  ClientsModule,
+  AccountsModule,
+  TransfersModule,
+  BeneficiariesModule,
   ],
   controllers: [AppController],
   providers: [AppService],
